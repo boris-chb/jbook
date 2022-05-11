@@ -6,7 +6,6 @@ import { fetchPlugin } from './plugins/fetch-plugin';
 
 const App = () => {
   const [input, setInput] = useState('');
-  const [code, setCode] = useState('');
   const ref = useRef<any>();
   const iframe = useRef<any>();
 
@@ -27,6 +26,9 @@ const App = () => {
     if (!ref.current) {
       return;
     }
+
+    // resetting the iframe
+    iframe.current.srcdoc = html;
 
     // Bundling
     const result = await ref.current.build({
@@ -53,13 +55,20 @@ const App = () => {
       window.addEventListener(
         'message',
         e => {
-          eval(e.data)
+          try {
+            eval(e.data);
+          } catch (err) {
+            const root = document.getElementById('root');
+            root.innerHTML = \`<div style="color: red"><h4>Runtime Error</h4>\${err}</div>\`
+            console.error(err);
+          }
         },
         false
       );
     </script>
   </body>
-  </html>
+</html>
+
   `;
 
   return (
@@ -71,7 +80,6 @@ const App = () => {
       <div>
         <button onClick={onClick}>Run</button>
       </div>
-      <pre>{code}</pre>
       <iframe
         sandbox='allow-scripts'
         srcDoc={html}
