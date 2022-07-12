@@ -1,0 +1,60 @@
+import MonacoEditor, { EditorDidMount, monaco } from '@monaco-editor/react';
+import prettier from 'prettier';
+import parser from 'prettier/parser-babel';
+import { useRef } from 'react';
+
+interface CodeEditorProps {
+  initialValue: string;
+  onChange(value: string): void;
+}
+
+const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
+  const editorRef = useRef<any>();
+
+  const onEditorDidMount: EditorDidMount = (getValue, monacoEditor) => {
+    editorRef.current = monacoEditor;
+    monacoEditor.onDidChangeModelContent(() => onChange(getValue()));
+    monacoEditor.getModel()?.updateOptions({ tabSize: 2 });
+  };
+
+  const onFormat = () => {
+    // get current value
+    console.log(editorRef.current);
+    const raw = editorRef.current.getModel().getValue();
+    // format value
+    const formatted = prettier.format(raw, {
+      parser: 'babel',
+      plugins: [parser],
+      useTabs: false,
+      semi: true,
+      singleQuote: true,
+      jsxSingleQuote: true,
+    });
+    // set value back
+    editorRef.current.setValue(formatted);
+  };
+
+  return (
+    <>
+      <button onClick={onFormat}>Format</button>
+      <MonacoEditor
+        editorDidMount={onEditorDidMount}
+        value={initialValue}
+        language='javascript'
+        height={'500px'}
+        theme='dark'
+        options={{
+          minimap: { enabled: false },
+          wordWrap: 'on',
+          showUnused: false,
+          folding: false,
+          lineNumbersMinChars: 2,
+          fontSize: 16,
+          scrollBeyondLastLine: false,
+          automaticLayout: true,
+        }}
+      />
+    </>
+  );
+};
+export default CodeEditor;
