@@ -1,7 +1,9 @@
-import MonacoEditor, { EditorDidMount, monaco } from '@monaco-editor/react';
+import MonacoEditor, { EditorDidMount } from '@monaco-editor/react';
 import prettier from 'prettier';
 import parser from 'prettier/parser-babel';
 import { useRef } from 'react';
+
+import './CodeEditor.css';
 
 interface CodeEditorProps {
   initialValue: string;
@@ -22,21 +24,28 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
     console.log(editorRef.current);
     const raw = editorRef.current.getModel().getValue();
     // format value
-    const formatted = prettier.format(raw, {
-      parser: 'babel',
-      plugins: [parser],
-      useTabs: false,
-      semi: true,
-      singleQuote: true,
-      jsxSingleQuote: true,
-    });
+    const formatted = prettier
+      .format(raw, {
+        parser: 'babel',
+        plugins: [parser],
+        useTabs: false,
+        semi: true,
+        singleQuote: true,
+        jsxSingleQuote: true,
+      })
+      .replace(/\n$/, ''); // remove new-line at the end
     // set value back
     editorRef.current.setValue(formatted);
   };
 
   return (
-    <>
-      <button onClick={onFormat}>Format</button>
+    <div className='editor-wrapper'>
+      <button
+        className='button button-format is-primary is-small'
+        onClick={onFormat}
+      >
+        Format
+      </button>
       <MonacoEditor
         editorDidMount={onEditorDidMount}
         value={initialValue}
@@ -54,7 +63,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
           automaticLayout: true,
         }}
       />
-    </>
+    </div>
   );
 };
 export default CodeEditor;
