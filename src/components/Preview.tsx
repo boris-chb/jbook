@@ -35,7 +35,6 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
   useEffect(() => {
     // resetting the iframe every time code changes
     iframe.current.srcdoc = html;
-    // setCode(result.outputFiles[0].text);
     iframe.current.contentWindow.postMessage(code, '*');
   }, [code]);
 
