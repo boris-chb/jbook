@@ -23,6 +23,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
     // get current value
     console.log(editorRef.current);
     const raw = editorRef.current.getModel().getValue();
+
     // format value
     const formatted = prettier
       .format(raw, {
@@ -34,6 +35,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
         jsxSingleQuote: true,
       })
       .replace(/\n$/, ''); // remove new-line at the end
+
     // set value back
     editorRef.current.setValue(formatted);
   };
