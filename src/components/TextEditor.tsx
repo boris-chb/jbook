@@ -12,10 +12,8 @@ const TextEditor: React.FC = () => {
     // Preview and Edit Mode:
     const listener = (e: MouseEvent) => {
       if (ref.current && e.target && ref.current.contains(e.target as Node)) {
-        console.log('element clicked is inside editor');
         return;
       }
-      console.log('clicked outside editor');
       setEditing(false);
     };
     document.addEventListener('click', listener, { capture: true });
@@ -41,4 +39,5 @@ const TextEditor: React.FC = () => {
     </div>
   );
 };
+
 export default TextEditor;
