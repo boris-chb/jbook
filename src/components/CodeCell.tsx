@@ -32,7 +32,11 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     <Resizable direction='vertical'>
       <div
         className=''
-        style={{ height: '100%', display: 'flex', flexDirection: 'row' }}
+        style={{
+          height: 'calc(100% - 10px)',
+          display: 'flex',
+          flexDirection: 'row',
+        }}
       >
         <Resizable direction='horizontal'>
           <CodeEditor
