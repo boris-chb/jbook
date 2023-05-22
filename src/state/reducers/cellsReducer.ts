@@ -25,16 +25,6 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
       const { id, content } = action.payload;
       state.data[id].content = content;
       return state;
-    // return {
-    //   ...state,
-    //   data: {
-    //     ...state.data,
-    //     [id]: {
-    //       ...state.data[id],
-    //       content,
-    //     },
-    //   },
-    // };
 
     case ActionType.DELETE_CELL:
       delete state.data[action.payload];
@@ -70,7 +60,7 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
     default:
       return state;
   }
-});
+}, initialState);
 
 const randomId = () => {
   return Math.random().toString(36).substring(2, 5);
